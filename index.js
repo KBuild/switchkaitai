@@ -15,6 +15,7 @@ async function instanceBrowser() {
   }
 
   return puppeteer.launch({
+    executablePath: 'google-chrome-stable',
     headless: true,
   });
 }
@@ -27,5 +28,6 @@ async function instanceBrowser() {
   const list = await page.$$eval('.o_c-item-card', els => els.map(el => el.textContent.trim()));
   const soldoutList = list.map(str => str.includes('品切れ'));
 
+  console.dir(list, soldoutList);
   await browser.close();
 })();

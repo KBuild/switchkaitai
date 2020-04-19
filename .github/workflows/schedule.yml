@@ -1,0 +1,16 @@
+name: Scheduled Job
+on:
+  schedule:
+    - cron: '*/20 8-18 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install
+        uses: ianwalter/puppeteer@3.0.0
+      - name: Run Girls, Run!
+        run: |
+          npm run start
+          
