@@ -1,0 +1,20 @@
+{
+  "name": "switchkaitai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "nintendo",
+    "switch"
+  ],
+  "author": "KBuild",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^3.0.0",
+    "rimraf": "^3.0.2"
+  }
+}
