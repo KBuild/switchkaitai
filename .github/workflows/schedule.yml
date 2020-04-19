@@ -12,5 +12,4 @@ jobs:
         uses: ianwalter/puppeteer@3.0.0
       - name: Run Girls, Run!
         run: |
-          npm run start
-          
+          npm install && npm run start
