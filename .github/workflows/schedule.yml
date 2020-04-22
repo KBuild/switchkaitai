@@ -13,3 +13,7 @@ jobs:
       - name: Run Girls, Run!
         run: |
           npm install && npm run start
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
