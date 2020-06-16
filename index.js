@@ -37,7 +37,8 @@ async function instanceBrowser() {
     // for using this instance, please add Chromium binary path of Windows to runtime path
     return puppeteer.launch({
       executablePath: 'chrome.exe',
-      headless: true,
+      headless: false,
+      userDataDir: '/tmp',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -46,19 +47,35 @@ async function instanceBrowser() {
   }
 
   return puppeteer.launch({
-    executablePath: 'google-chrome-stable',
     headless: true,
+    userDataDir: '/tmp',
   });
+}
+
+async function waitPage(page) {
+  try {
+    await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
+    await page.goto('https://store.nintendo.co.jp/search.html?sshow=1&category=console_accessory&sub_category=console&sort=release_new&from=shelf&page=1');
+    let res = await page.waitFor('.o_c-item-card', {
+      timeout: 7500,
+    });
+    return res;
+  } catch(err) {
+    console.error(err)
+    return false;
+  }
 }
 
 (async () => {
   const browser = await instanceBrowser();
   try {
     const page = await browser.newPage();
-    await page.goto('https://store.nintendo.co.jp/search.html?sshow=1&category=console_accessory&sub_category=console&sort=release_new&from=shelf&page=1');
-    await page.waitFor('.o_c-item-card', {
-      timeout: 30000,
-    });
+    for (let i = 0 ; i < 3 ; i++) {
+      let res = await waitPage(page);
+      if (res !== false) {
+        break;
+      }
+    }
     const list = await page.$$eval('.o_c-item-card', els => els.map(el => el.textContent.trim()));
     const notsold = list.filter(str => !str.includes('品切れ'));
 
