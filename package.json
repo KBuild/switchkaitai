@@ -14,7 +14,7 @@
   "author": "KBuild",
   "license": "MIT",
   "dependencies": {
-    "nodemailer": "^6.4.8",
+    "nodemailer": "^6.4.16",
     "puppeteer": "^3.3.0",
     "rimraf": "^3.0.2"
   }
