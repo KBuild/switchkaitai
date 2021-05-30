@@ -150,3 +150,12 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/node,linux,windows
+
+# Not Use Yarn2 Zero-installs yet
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
