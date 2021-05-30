@@ -1,6 +1,6 @@
-const puppeteer = require('puppeteer');
-const process = require('process');
-const nodemailer = require('nodemailer');
+import process from 'process';
+import puppeteer, { Page, Puppeteer } from 'puppeteer';
+import nodemailer from 'nodemailer';
 
 const mailopt = {
   user: process.env.MAIL_USER,
@@ -9,7 +9,7 @@ const mailopt = {
   to: process.env.MAIL_TO,
 }
 
-async function sendMail(message) {
+async function sendMail(message: string) {
   const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -19,7 +19,7 @@ async function sendMail(message) {
   });
 
   try {
-    const res = await transport.sendMail({
+    await transport.sendMail({
       from: mailopt.from,
       to: mailopt.to,
       subject: "Go Buy Switch!!!!!",
@@ -52,7 +52,7 @@ async function instanceBrowser() {
   });
 }
 
-async function waitPage(page) {
+async function waitPage(page: Page) {
   try {
     await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
     await page.goto('https://store.nintendo.co.jp/search.html?sshow=1&category=console_accessory&sub_category=console&sort=release_new&from=shelf&page=1');
@@ -76,8 +76,13 @@ async function waitPage(page) {
         break;
       }
     }
-    const list = await page.$$eval('.o_c-item-card', els => els.map(el => el.textContent.trim()));
-    const notsold = list.filter(str => !str.includes('品切れ'));
+    const listHandle = await page.$$('.o_c-item-card');
+    const list = await Promise.all(listHandle.map(async handle => {
+      const txt = await handle.getProperty('textContext');
+      return txt?.toString().trim();
+    }));
+    //const list = await page.evaluate((els) => els.map(el => el.textContent.trim()), listHandle);
+    const notsold = list.filter(str => !str?.includes('品切れ'));
 
     if (notsold.length > 0) {
       await sendMail(notsold.join("\n"));
